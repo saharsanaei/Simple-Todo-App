@@ -3,24 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Manager</title>
+    <title>Simple Todo App</title>
 </head>
 <body>
-    <h1>Task Manager</h1>
-    <ul id="tasks-list"></ul>
+    <h1>Simple Todo App</h1>
+    <ul id="todo-list"></ul>
+
     <script>
-        // Fetch tasks from the API and display them
-        fetch('http://localhost:3000/api/tasks')
-            .then(response => response.json())
-            .then(tasks => {
-                const tasksList = document.getElementById('tasks-list');
-                tasks.forEach(task => {
-                    const listItem = document.createElement('li');
-                    listItem.textContent = task.title;
-                    tasksList.appendChild(listItem);
+        async function fetchTodos() {
+            try {
+                const response = await fetch('http://localhost:3000/api/tasks');
+                const todos = await response.json();
+                const todoList = document.getElementById('todo-list');
+                todoList.innerHTML = '';
+                todos.forEach(todo => {
+                    const li = document.createElement('li');
+                    li.textContent = todo.title;
+                    todoList.appendChild(li);
                 });
-            })
-            .catch(error => console.error('Error fetching tasks:', error));
+            } catch (error) {
+                console.error('Error fetching tasks:', error);
+            }
+        }
+
+        fetchTodos();
     </script>
 </body>
 </html>
