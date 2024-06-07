@@ -1,9 +1,29 @@
-import { executeQuery } from '../../core/database-manager/postgres-service.js'; // Import the executeQuery function
+import { query } from '../../core/database-manager/postgres-service.js';
 
-// Function to get all tasks from the database
-const getAllTasks = async () => {
-  const query = 'SELECT * FROM tasks'; // SQL query to select all tasks
-  return executeQuery(query); // Execute the query and return the results
+export const getAllDataQuery = async () => {
+    return await query('SELECT * FROM public.tasks');
 };
 
-export { getAllTasks }; // Export the getAllTasks function
+export const insertData = async (title, description) => {
+    return await query('INSERT INTO public.tasks (title, description) VALUES ($1, $2) RETURNING *', [title, description]);
+};
+
+export const getDataQuery = async (id) => {
+    return await query('SELECT * FROM public.tasks WHERE id = $1', [id]);
+};
+
+export const updateDataQuery = async (id, title, description, is_completed) => {
+    return await query('UPDATE public.tasks SET title = $1, description = $2, is_completed = $3 WHERE id = $4 RETURNING *', [title, description, is_completed, id]);
+};
+
+export const deleteDataQuery = async (id) => {
+    return await query('DELETE FROM public.tasks WHERE id = $1', [id]);
+};
+
+export const deleteAllDataQuery = async () => {
+    return await query('DELETE FROM public.tasks');
+};
+
+export const markAllCompleteQuery = async () => {
+    return await query('UPDATE public.tasks SET is_completed = true');
+};
